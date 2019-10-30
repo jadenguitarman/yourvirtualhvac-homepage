@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>EDS Suite</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<style>
 			@font-face {
 				font-family: "Big Shoulders";
@@ -16,6 +17,11 @@
 			@font-face {
 				font-family: "Lato Italic";
 				src: url("assets/lato_italic.ttf");
+			}
+			
+			@font-face {
+				font-family: "Staatliches";
+				src: url("assets/staatliches.ttf");
 			}
 			
 			body {
@@ -92,26 +98,28 @@
 			}
 			
 			#section1 h1 {
-				top: 35vh;
-				line-height: 15vh;
-				font-size: 15vh;
+				line-height: 20vw;
+				font-size: 20vw;
+				top: 25vh;
 			}
 			
 			#section1 h2 {
-				top: 55vh;
-				line-height: 7vh;
-				font-size: 6vh;
+				line-height: 8vw;
+				font-size: 8vw;
+				top: 40vh;
 			}
 			
-			@media (max-width: 450px) {
+			@media (min-width: 450px) {
 				#section1 h1 {
-					line-height: 20vw;
-					font-size: 20vw;
+					top: 35vh;
+					line-height: 15vh;
+					font-size: 15vh;
 				}
 				
 				#section1 h2 {
-					line-height: 8vw;
-					font-size: 8vw;
+					top: 55vh;
+					line-height: 7vh;
+					font-size: 6vh;
 				}
 			}
 			
@@ -122,6 +130,21 @@
 				font-family: "Lato Italic";
 				text-align: right;
 				letter-spacing: 1px;
+			}
+			
+			#section1cta {
+				width: 200px;
+				height: 50px;
+				text-align: center;
+				border-radius: 2px;
+				border: 0;
+				padding: 0;
+				left: 30vw;
+				top: 80vh;
+				background: #ffa500;
+				font-family: "Staatliches";
+				color: #111;
+				font-size: 25px;
 			}
 			
 			@media (max-width: 860px) and (min-width: 750px) {
@@ -135,6 +158,19 @@
 					left: 0;
 					width: 100vw;
 					text-align: center;
+				}
+				
+				#section1cta {
+					top: 55vh;
+					left: calc(50% - 100px);
+				}
+				
+				#section1 h1 {
+					top: 25vh;
+				}
+				
+				#section1 h2 {
+					top: 40vh;
 				}
 			}
 			
@@ -229,6 +265,7 @@
 				<span><meta name="background-image-credit" content="John Dortmunder at Pixabay"></span>
 				<h1>The EDS Suite</h1>
 				<h2>Let us do the heavy lifting.</h2>
+				<input type="button" id="section1cta" value="SUBSCRIBE NOW">
 				<p>
 					<span class="fadein">
 						<span>Welcome to the EDS Suite, the favorite</span>
@@ -257,7 +294,7 @@
 			document.body.addEventListener('mousewheel', e=>scroll_page(e.deltaY)); //IE, Edge, Chrome, Safari
 			var ts;
 			document.body.addEventListener('touchstart', e=>{ts = e.touches[0].clientY;}); //touch devices
-			document.body.addEventListener('touchmove', e=>scroll_page(e.changedTouches[0].clientY - ts)); //touch devices
+			document.body.addEventListener('touchmove', e=>scroll_page(-(e.changedTouches[0].clientY - ts)*0.3)); //touch devices
 			
 			let current = 0;
 			function scroll_page (delta) {
