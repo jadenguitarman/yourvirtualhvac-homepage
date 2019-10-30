@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>EDS Suite</title>
+		<style>
+			@font-face {
+				font-family: "Big Shoulders";
+				src: url("assets/big_shoulders.ttf");
+			}
+			
+			@font-face {
+				font-family: "Lato";
+				src: url("assets/lato.ttf");
+			}
+			
+			@font-face {
+				font-family: "Lato Italic";
+				src: url("assets/lato_italic.ttf");
+			}
+			
+			body {
+				margin: 0;
+				overflow: hidden;
+			}
+			
+			#scrollbar {
+				width: 10px;
+				height: 100px;
+				background: #444;
+				border-radius: 5px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 1;
+			}
+			
+			main {
+				position: absolute;
+				top: 0px;
+				left: 0;
+				width: 100vw;
+				transition: translate 5ms linear;
+			}
+			
+			header {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 10vh;
+				z-index: 100;
+			}
+			
+			#original_logo {
+				height: 100%;
+				margin-left: 9px;
+			}
+			
+			@media (max-width:600px) {
+				#original_logo {
+					text-align: center;
+				}
+			}
+			
+			h1, h2, h3, h4, h5, h6 {
+				font-family: "Big Shoulders";
+			}
+			
+			.section {
+				width: 100vw;
+				height: 100vh;
+				color: #eee;
+				position: relative;
+			}
+			
+			.section>* {
+				position: absolute;
+				margin: 0;
+			}
+			
+			#section1 {
+				background: linear-gradient(0deg, rgba(0, 0, 80, 0.7), rgba(0, 0, 80, 0.9)), url("assets/ductwork.jpg");
+				background-position: center;
+				background-size: cover;
+				background-repeat: no-repeat;
+			}
+			
+			#section1 h1, #section1 h2{
+				left: 0;
+				width: 100%;
+				text-align: center;
+			}
+			
+			#section1 h1 {
+				top: 35vh;
+				line-height: 15vh;
+				font-size: 15vh;
+			}
+			
+			#section1 h2 {
+				top: 55vh;
+				line-height: 7vh;
+				font-size: 6vh;
+			}
+			
+			@media (max-width: 450px) {
+				#section1 h1 {
+					line-height: 20vw;
+					font-size: 20vw;
+				}
+				
+				#section1 h2 {
+					line-height: 8vw;
+					font-size: 8vw;
+				}
+			}
+			
+			#section1 p {
+				left: 60vw;
+				width: 35vw;
+				bottom: 5vh;
+				font-family: "Lato Italic";
+				text-align: right;
+				letter-spacing: 1px;
+			}
+			
+			@media (max-width: 860px) and (min-width: 750px) {
+				#section1 p {
+					letter-spacing: unset;
+				}
+			}
+			
+			@media (max-width: 750px) {
+				#section1 p {
+					left: 0;
+					width: 100vw;
+					text-align: center;
+				}
+			}
+			
+			@keyframes an {
+				from {
+					opacity: 0;
+					transform: perspective(500px) translate3d(-35px, -40px, -150px) rotate3d(1, -1, 0, 35deg);
+				}
+				to {
+					opacity: 1;
+					transform: perspective(500px) translate3d(0, 0, 0);
+				}
+			}
+			
+			.char {
+				animation: an 1s ease-out 1 both;
+				display: inline-block;
+			}
+			
+			@-webkit-keyframes bounce {
+				0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}
+				40% {-webkit-transform: translateY(-30px);}
+				60% {-webkit-transform: translateY(-15px);}
+			}
+
+			@-moz-keyframes bounce {
+				0%, 20%, 50%, 80%, 100% {-moz-transform: translateY(0);}
+				40% {-moz-transform: translateY(-30px);}
+				60% {-moz-transform: translateY(-15px);}
+			}
+
+			@keyframes bounce {
+				0%, 20%, 50%, 80%, 100% {
+					-webkit-transform: translateY(0);
+					-moz-transform: translateY(0);
+					-ms-transform: translateY(0);
+					-o-transform: translateY(0);
+					transform: translateY(0);
+				}
+				40% {
+					-webkit-transform: translateY(-30px);
+					-moz-transform: translateY(-30px);
+					-ms-transform: translateY(-30px);
+					-o-transform: translateY(-30px);
+					transform: translateY(-30px);
+				}
+				60% {
+					-webkit-transform: translateY(-15px);
+					-moz-transform: translateY(-15px);
+					-ms-transform: translateY(-15px);
+					-o-transform: translateY(-15px);
+					transform: translateY(-15px);
+				}
+			}
+			
+			#arrow {
+				-webkit-animation: bounce 2s infinite;
+				-moz-animation: bounce 2s infinite;
+				animation: bounce 2s infinite;
+				width: 50px;
+				bottom: 10px;
+				left: 20px;
+			}
+			
+			@media (max-width: 360px) {
+				#arrow {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<svg id="original_logo" class="filter" data-z="102" viewBox="0 0 130.821 87.938">
+				<g fill="none" stroke="#888" stroke-width="7.408" mask="url(#mask)">
+					<path d="M14.947 22.795l.082 38.443c16.467-.275 41.25.438 49.406-.502 6.209-.328 9.144-3.87 12.234-7.623 3.127-5.011 3.548-11.665 1.11-16.988-1.62-3.331-3.514-6.45-8.268-8.301-6.395-2.218-12.737-1.772-19.435-1.509l-.088 27.165"/>
+					<path d="M14.936 22.795v20.618h21.458"/>
+					<path d="M14.936 22.795v3.703h27.14"/>
+					<path d="M14.947 22.795l.082 38.443c16.465-.275 32.966.437 49.406-.502 4.51-.99 8.986-4.004 11.765-6.974 2.592-3.606 8.862 1.661 12.762 3.464 5.917 2.908 13.532 6.138 20.063 2.836 4.74-3.09 3.357-10.703-1.241-13.442-5.46-3.038-12.859-1.938-17.28-7.474-2.658-4.75 1.111-11.035 6.37-12.292 5.538-1.305 10.999 1.337 15.726 3.934"/>
+				</g>
+				<mask id="mask">
+					<rect x="0" y="0" width="125" height="80" fill="#fff"/>
+					<path fill="none" stroke="#000" stroke-width="6" d="M85.396 49.487c-1.11 4.279-2.139 5.965-4.674 9.481"/>
+				</mask>
+			</svg>
+		</header>
+		<div id="scrollbar"></div>
+		<main>
+			<div class="section" id="section1">
+				<span><meta name="background-image-credit" content="John Dortmunder at Pixabay"></span>
+				<h1>The EDS Suite</h1>
+				<h2>Let us do the heavy lifting.</h2>
+				<p>
+					<span class="fadein">
+						<span>Welcome to the EDS Suite, the favorite</span>
+						<span>digital toolbox of over 22,000 HVAC</span>
+						<span>professionals like yourself around</span>
+						<span>the globe. We take care of all the</span>
+						<span>confusing and complex math so</span>
+						<span>you can focus on interaction</span>
+						<span>with clientele, making sales,</span>
+						<span>and doing what you do best.</span>
+					</span>
+				</p>
+				<svg id="arrow" viewBox="0 0 23.856 37.806">
+					<path fill="none" stroke="#eee" stroke-width="3.969" d="M11.888 0v35M1.41 24.43L11.887 35l10.57-10.479"/>
+				</svg>
+			</div>
+			<div class="section" id="section2">
+				
+			</div>
+		</main>
+		<script>
+			const NUM_PAGES = document.getElementsByClassName("section").length;
+			document.querySelector("main").style.height = NUM_PAGES+"00vh";
+		
+			document.body.addEventListener('DOMMouseScroll', e=>scroll_page(e.detail)); //Firefox
+			document.body.addEventListener('mousewheel', e=>scroll_page(e.deltaY)); //IE, Edge, Chrome, Safari
+			var ts;
+			document.body.addEventListener('touchstart', e=>{ts = e.touches[0].clientY;}); //touch devices
+			document.body.addEventListener('touchmove', e=>scroll_page(e.changedTouches[0].clientY - ts)); //touch devices
+			
+			let current = 0;
+			function scroll_page (delta) {
+				let ans = current - delta;
+				if (ans < ((NUM_PAGES-1)*-window.innerHeight)) ans = -window.innerHeight;
+				else if (ans > 0) ans = 0;
+				current = ans;
+				document.querySelector("main").style.transform = "translate(0px, "+ans+"px)";
+				document.getElementById("scrollbar").style.transform = "translate(0px, "+(Math.abs(ans/((NUM_PAGES-1)*window.innerHeight))*(window.innerHeight-100))+"px)";
+				
+			}
+			function animateText(query){
+				var span = document.querySelector(query);
+				var newDom = '';
+				[...span.children].forEach(text=>{
+					text.innerText.split("").forEach(x=>{
+						newDom += '<span class="char">' + (x.trim()||"&nbsp;") + '</span>';
+					});
+					newDom += "<br>";
+				});
+				span.innerHTML = newDom;
+				[...span.children].forEach((x,i)=>{x.style['animation-delay'] = (x.nodeName=="BR") ? "" : (6*i + 'ms');});
+			}
+			
+			animateText('.fadein');
+		</script>
+	</body>
+</html>
