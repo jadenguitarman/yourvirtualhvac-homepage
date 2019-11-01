@@ -54,7 +54,8 @@
 				top: 0px;
 				left: 0;
 				width: 100vw;
-				transition: translate 5ms linear;
+				transition: translate 5ms linear,
+							filter 0.5s ease-in-out;
 			}
 
 			header {
@@ -103,7 +104,7 @@
 				left: -300px;
 				position: fixed;
 				top: 0;
-				transition: left 1s ease-in-out;
+				transition: left 1s ease-out;
 				height: 100vh;
 				background: #eee;
 				z-index: -1;
@@ -130,6 +131,17 @@
 
 			#open_menu_div a:hover {
 				transform: scale(1.3);
+			}
+
+			#open_menu_logo {
+				right: 20px;
+				height: 80px;
+				position: absolute;
+				bottom: 20px;
+			}
+
+			#open_menu_logo svg {
+				height: 100%;
 			}
 
 			#original_logo {
@@ -397,7 +409,7 @@
 	<body>
 		<header>
 			<a href="https://www.eds.tech">
-				<svg id="original_logo" class="filter" data-z="102" viewBox="0 0 130.821 87.938">
+				<svg id="original_logo" viewBox="0 0 130.821 87.938">
 					<g fill="none" stroke="#888" stroke-width="7.408" mask="url(#mask)">
 						<path d="M14.947 22.795l.082 38.443c16.467-.275 41.25.438 49.406-.502 6.209-.328 9.144-3.87 12.234-7.623 3.127-5.011 3.548-11.665 1.11-16.988-1.62-3.331-3.514-6.45-8.268-8.301-6.395-2.218-12.737-1.772-19.435-1.509l-.088 27.165"/>
 						<path d="M14.936 22.795v20.618h21.458"/>
@@ -410,7 +422,7 @@
 					</mask>
 				</svg>
 			</a>
-			<nav>
+			<nav class="hamburger_nav">
 				<a href="https://www.yourvirtualhvac.com/application/signin">
 					<span>Sign In</span>
 				</a><a href="https://www.yourvirtualhvac.com/application/signin">
@@ -449,6 +461,20 @@
 				<a href="#section4">
 					<span>About Us<span>
 				</a>
+				<a id="open_menu_logo" href="https://www.eds.tech">
+					<svg class="filter" data-z="102" viewBox="0 0 130.821 87.938">
+						<g fill="none" stroke="#888" stroke-width="7.408" mask="url(#mask)">
+							<path d="M14.947 22.795l.082 38.443c16.467-.275 41.25.438 49.406-.502 6.209-.328 9.144-3.87 12.234-7.623 3.127-5.011 3.548-11.665 1.11-16.988-1.62-3.331-3.514-6.45-8.268-8.301-6.395-2.218-12.737-1.772-19.435-1.509l-.088 27.165"></path>
+							<path d="M14.936 22.795v20.618h21.458"></path>
+							<path d="M14.936 22.795v3.703h27.14"></path>
+							<path d="M14.947 22.795l.082 38.443c16.465-.275 32.966.437 49.406-.502 4.51-.99 8.986-4.004 11.765-6.974 2.592-3.606 8.862 1.661 12.762 3.464 5.917 2.908 13.532 6.138 20.063 2.836 4.74-3.09 3.357-10.703-1.241-13.442-5.46-3.038-12.859-1.938-17.28-7.474-2.658-4.75 1.111-11.035 6.37-12.292 5.538-1.305 10.999 1.337 15.726 3.934"></path>
+						</g>
+						<mask id="mask">
+							<rect x="0" y="0" width="125" height="80" fill="#fff"></rect>
+							<path fill="none" stroke="#000" stroke-width="6" d="M85.396 49.487c-1.11 4.279-2.139 5.965-4.674 9.481"></path>
+						</mask>
+					</svg>
+				</a>
 			</div>
 		</header>
 		<div id="scrollbar"></div>
@@ -482,47 +508,75 @@
 			const NUM_PAGES = document.getElementsByClassName("section").length;
 			const NAV_LIMIT = -(document.querySelector("#section1 h1").getBoundingClientRect().y - 100);
 			let show_full_nav = true;
+			let allowed_to_scroll = true;
 
 
 			document.querySelector("main").style.height = NUM_PAGES+"00vh";
-			document.body.addEventListener('DOMMouseScroll', e=>scroll_page(e.detail)); //Firefox
-			document.body.addEventListener('mousewheel', e=>scroll_page(e.deltaY)); //IE, Edge, Chrome, Safari
+			document.body.addEventListener('DOMMouseScroll', e=>scroll_page(e.detail, e), {passive:false}); //Firefox
+			document.body.addEventListener('mousewheel', e=>scroll_page(e.deltaY, e), {passive:false}); //IE, Edge, Chrome, Safari
 			var ts;
 			document.body.addEventListener('touchstart', e=>{ts = e.touches[0].clientY;}); //touch devices
-			document.body.addEventListener('touchmove', e=>scroll_page(-(e.changedTouches[0].clientY - ts)*0.3)); //touch devices
+			document.body.addEventListener('touchmove', e=>scroll_page(-(e.changedTouches[0].clientY - ts)*0.3, e), {passive:false}); //touch devices
 
-			document.addEventListener("resize", e=>{
-				if (window.innerWidth>535) {
-					show_full_nav = true;
-				} else {
-					show_full_nav = false;
-				}
+
+			["load", "resize"].forEach(event_name => {
+				window.addEventListener(event_name, e=>{
+					if (window.innerWidth>535) {
+						show_full_nav = true;
+						if (current < NAV_LIMIT) {
+							document.getElementsByTagName("nav")[0].className="hamburger_nav";
+							document.getElementById("original_logo").style.right="-110px";
+							document.getElementById("original_logo").style.padding="0";
+						} else if (current > NAV_LIMIT) {
+							document.getElementsByTagName("nav")[0].className="";
+							document.getElementById("original_logo").style.right="";
+							document.getElementById("original_logo").style.padding="";
+						}
+						console.log("true");
+					} else {
+						show_full_nav = false;
+						document.getElementsByTagName("nav")[0].className="hamburger_nav";
+						document.getElementById("original_logo").style.right="-110px";
+						document.getElementById("original_logo").style.padding="0";
+						console.log("false");
+					}
+				});
 			});
 
 			let hb = document.getElementById("hamburger");
 			hb.addEventListener("click", e=>{
-				hb.className = (hb.className == "open_menu") ? "" : "open_menu";
-				document.getElementById("open_menu_div").style.left = (document.getElementById("open_menu_div").style.left == "0px") ? "-300px" : "0px";
-
+				let i = +(hb.className == "open_menu");
+				hb.className = ["open_menu",""][i];
+				document.getElementById("open_menu_div").style.left = ["0px","-300px"][i];
+				allowed_to_scroll = !allowed_to_scroll;
+				document.getElementsByTagName("main")[0].style.filter = ["brightness(0.5)",""][i];
 			});
 
 			let current = 0;
-			function scroll_page (delta) {
-				let ans = current - delta;
-				if (ans < ((NUM_PAGES-1)*-window.innerHeight)) ans = -window.innerHeight;
-				else if (ans > 0) ans = 0;
-				current = ans;
-				var direction = delta < 0 ? "up" : "down";
-				if (direction=="down" && current < NAV_LIMIT) {
-					document.getElementsByTagName("nav")[0].className="hamburger_nav";
-					document.getElementById("original_logo").style.right="-100px";
-				} else if (direction=="up" && current > NAV_LIMIT) {
-					document.getElementsByTagName("nav")[0].className="";
-					document.getElementById("original_logo").style.right="";
-				}
-				if (window.innerWidth > 600) {
-					document.querySelector("main").style.transform = "translate(0px, "+ans+"px)";
-					document.getElementById("scrollbar").style.transform = "translate(0px, "+(Math.abs(ans/((NUM_PAGES-1)*window.innerHeight))*(window.innerHeight-100))+"px)";
+			function scroll_page (delta, ev) {
+				if (!allowed_to_scroll) {
+					ev.preventDefault();
+				} else {
+					let ans = current - delta;
+					if (ans < ((NUM_PAGES-1)*-window.innerHeight)) ans = -window.innerHeight;
+					else if (ans > 0) ans = 0;
+					current = ans;
+					var direction = delta < 0 ? "up" : "down";
+					if (show_full_nav) {
+						if (direction=="down" && current < NAV_LIMIT) {
+							document.getElementsByTagName("nav")[0].className="hamburger_nav";
+							document.getElementById("original_logo").style.right="-110px";
+							document.getElementById("original_logo").style.padding="0";
+						} else if (direction=="up" && current > NAV_LIMIT) {
+							document.getElementsByTagName("nav")[0].className="";
+							document.getElementById("original_logo").style.right="";
+							document.getElementById("original_logo").style.padding="";
+						}
+					}
+					if (window.innerWidth > 600) {
+						document.querySelector("main").style.transform = "translate(0px, "+ans+"px)";
+						document.getElementById("scrollbar").style.transform = "translate(0px, "+(Math.abs(ans/((NUM_PAGES-1)*window.innerHeight))*(window.innerHeight-100))+"px)";
+					}
 				}
 			}
 
