@@ -67,11 +67,17 @@
 			}
 
 			nav {
-				position: absolute;
+				position: fixed;
 				top: 0;
 				left: 0;
 				width: 65%;
 				transition: left 0.5s ease-in-out;
+			}
+
+			@media (max-width:535px) {
+				nav {
+					transition: auto;
+				}
 			}
 
 			nav a {
@@ -92,18 +98,47 @@
 				transform: scale(1.3);
 			}
 
+			#open_menu_div {
+				width: 300px;
+				left: -300px;
+				position: fixed;
+				top: 0;
+				transition: left 1s ease-in-out;
+				height: 100vh;
+				background: #eee;
+				z-index: -1;
+			}
+
+			#open_menu_spacer {
+				width: 100%;
+				height: 10vh;
+			}
+
+			#open_menu_div a {
+				text-decoration: none;
+				font-size: 18pt;
+				font-family: "Lato Italic";
+				color: #111;
+				width: 100%;
+				display: block;
+				text-align: right;
+				padding-right: 20px;
+				box-sizing: border-box;
+				transform-origin: right;
+				transition: transform 1s ease-in-out;
+			}
+
+			#open_menu_div a:hover {
+				transform: scale(1.3);
+			}
+
 			#original_logo {
 				height: 100%;
 				position: absolute;
 				top: 0;
 				right: 0;
 				padding-right: 9px;
-			}
-
-			@media (max-width:600px) {
-				#original_logo {
-					text-align: center;
-				}
+				transition: right 0.5s;
 			}
 
 			h1, h2, h3, h4, h5, h6 {
@@ -180,10 +215,10 @@
 				left: 30vw;
 				top: 80vh;
 				background: linear-gradient(to right, #AE8625, #F7EF8A 50%, #D2AC47 75%, #EDC967);
-				/*background: #ffa500;*/
 				font-family: "Staatliches";
 				color: #111;
 				font-size: 25px;
+				cursor: pointer;
 			}
 
 			@media (max-width: 860px) and (min-width: 750px) {
@@ -230,6 +265,7 @@
 				height: 6vh;
 				width: 6vh;
 				transition: opacity 0.5s ease-out;
+				cursor: pointer;
 			}
 
 			.hamburger_nav #hamburger {
@@ -284,6 +320,10 @@
 				opacity: 1;
 				transform: rotate(-45deg) translate(50%, 0px);
 				left: -34%;
+			}
+
+			#hamburger.open_menu span {
+				background: #111;
 			}
 
 			@keyframes an {
@@ -388,6 +428,28 @@
 					<span></span>
 				</div>
 			</nav>
+			<div id="open_menu_div">
+				<div id="open_menu_spacer"></div>
+				<a href="https://www.yourvirtualhvac.com/application/signin">
+					<span>Sign In</span>
+				</a>
+				<br>
+				<a href="https://www.yourvirtualhvac.com/application/signin">
+					<span>Register</span>
+				</a>
+				<br>
+				<a href="#section2">
+					<span>Why</span>
+				</a>
+				<br>
+				<a href="#section3">
+					<span>Pricing</span>
+				</a>
+				<br>
+				<a href="#section4">
+					<span>About Us<span>
+				</a>
+			</div>
 		</header>
 		<div id="scrollbar"></div>
 		<main>
@@ -418,12 +480,31 @@
 		</main>
 		<script>
 			const NUM_PAGES = document.getElementsByClassName("section").length;
+			const NAV_LIMIT = -(document.querySelector("#section1 h1").getBoundingClientRect().y - 100);
+			let show_full_nav = true;
+
+
 			document.querySelector("main").style.height = NUM_PAGES+"00vh";
 			document.body.addEventListener('DOMMouseScroll', e=>scroll_page(e.detail)); //Firefox
 			document.body.addEventListener('mousewheel', e=>scroll_page(e.deltaY)); //IE, Edge, Chrome, Safari
 			var ts;
 			document.body.addEventListener('touchstart', e=>{ts = e.touches[0].clientY;}); //touch devices
 			document.body.addEventListener('touchmove', e=>scroll_page(-(e.changedTouches[0].clientY - ts)*0.3)); //touch devices
+
+			document.addEventListener("resize", e=>{
+				if (window.innerWidth>535) {
+					show_full_nav = true;
+				} else {
+					show_full_nav = false;
+				}
+			});
+
+			let hb = document.getElementById("hamburger");
+			hb.addEventListener("click", e=>{
+				hb.className = (hb.className == "open_menu") ? "" : "open_menu";
+				document.getElementById("open_menu_div").style.left = (document.getElementById("open_menu_div").style.left == "0px") ? "-300px" : "0px";
+
+			});
 
 			let current = 0;
 			function scroll_page (delta) {
@@ -432,15 +513,19 @@
 				else if (ans > 0) ans = 0;
 				current = ans;
 				var direction = delta < 0 ? "up" : "down";
-				console.log(direction);
-				console.log(current);
-				if (direction=="down" && current < -130) document.getElementsByTagName("nav")[0].className="hamburger_nav";
-				else if (direction=="up" && current > -130) document.getElementsByTagName("nav")[0].className="";
+				if (direction=="down" && current < NAV_LIMIT) {
+					document.getElementsByTagName("nav")[0].className="hamburger_nav";
+					document.getElementById("original_logo").style.right="-100px";
+				} else if (direction=="up" && current > NAV_LIMIT) {
+					document.getElementsByTagName("nav")[0].className="";
+					document.getElementById("original_logo").style.right="";
+				}
 				if (window.innerWidth > 600) {
 					document.querySelector("main").style.transform = "translate(0px, "+ans+"px)";
 					document.getElementById("scrollbar").style.transform = "translate(0px, "+(Math.abs(ans/((NUM_PAGES-1)*window.innerHeight))*(window.innerHeight-100))+"px)";
 				}
 			}
+
 			function animateText(query){
 				var span = document.querySelector(query);
 				var newDom = '';
