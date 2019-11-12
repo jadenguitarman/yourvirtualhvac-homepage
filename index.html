@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>EDS Suite</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 		<style>
 			@font-face {
 				font-family: "Big Shoulders";
@@ -73,6 +73,8 @@
 				left: 0;
 				width: 65%;
 				transition: left 0.5s ease-in-out;
+				display: flex;
+				justify-content: space-around;
 			}
 
 			@media (max-width:535px) {
@@ -82,7 +84,6 @@
 			}
 
 			nav a {
-				width: 20%;
 				display: inline-block;
 				line-height: 4vh;
 				padding: 3vh 0;
@@ -90,7 +91,7 @@
 				text-decoration: none;
 				color: #eee;
 				font-family: "Lato Italic";
-				font-size: 3vh;
+				font-size: 2.5vw;
 				transform-origin: left;
 				transition: transform 1s ease-in-out;
 			}
@@ -258,9 +259,11 @@
 				#section1 h2 {
 					top: 40vh;
 				}
+			}
 
+			@media (min-width:1000px) {
 				nav a {
-					font-size: 3vw;
+					font-size: 25px;
 				}
 			}
 
@@ -427,11 +430,13 @@
 					<span>Sign In</span>
 				</a><a href="https://www.yourvirtualhvac.com/application/signin">
 					<span>Register</span>
-				</a><a href="#section2">
+				</a><a href="#products">
+					<span>Products</span>
+				</a><a href="#why">
 					<span>Why</span>
-				</a><a href="#section3">
+				</a><a href="#pricing">
 					<span>Pricing</span>
-				</a><a href="#section4">
+				</a><a href="#about">
 					<span>About Us<span>
 				</a>
 				<div id="hamburger">
@@ -450,15 +455,19 @@
 					<span>Register</span>
 				</a>
 				<br>
-				<a href="#section2">
+				<a href="#products">
+					<span>Products</span>
+				</a>
+				<br>
+				<a href="#why">
 					<span>Why</span>
 				</a>
 				<br>
-				<a href="#section3">
+				<a href="#pricing">
 					<span>Pricing</span>
 				</a>
 				<br>
-				<a href="#section4">
+				<a href="#about">
 					<span>About Us<span>
 				</a>
 				<a id="open_menu_logo" href="https://www.eds.tech">
@@ -503,12 +512,23 @@
 			<div class="section" id="section2">
 
 			</div>
+			<div class="section" id="section3">
+
+			</div>
+			<div class="section" id="section4">
+
+			</div>
+			<div class="section" id="section5">
+
+			</div>
 		</main>
 		<script>
 			const NUM_PAGES = document.getElementsByClassName("section").length;
 			const NAV_LIMIT = -(document.querySelector("#section1 h1").getBoundingClientRect().y - 100);
 			let show_full_nav = true;
 			let allowed_to_scroll = true;
+			document.querySelector("main").style.transform = "translate(0px, 0px)";
+			let hash = location.hash;
 
 
 			document.querySelector("main").style.height = NUM_PAGES+"00vh";
@@ -518,29 +538,29 @@
 			document.body.addEventListener('touchstart', e=>{ts = e.touches[0].clientY;}); //touch devices
 			document.body.addEventListener('touchmove', e=>scroll_page(-(e.changedTouches[0].clientY - ts)*0.3, e), {passive:false}); //touch devices
 
-
-			["load", "resize"].forEach(event_name => {
-				window.addEventListener(event_name, e=>{
-					if (window.innerWidth>535) {
-						show_full_nav = true;
-						if (current < NAV_LIMIT) {
-							document.getElementsByTagName("nav")[0].className="hamburger_nav";
-							document.getElementById("original_logo").style.right="-110px";
-							document.getElementById("original_logo").style.padding="0";
-						} else if (current > NAV_LIMIT) {
-							document.getElementsByTagName("nav")[0].className="";
-							document.getElementById("original_logo").style.right="";
-							document.getElementById("original_logo").style.padding="";
-						}
-						console.log("true");
-					} else {
-						show_full_nav = false;
+			function check_sizing (e) {
+				if (window.innerWidth>680) {
+					show_full_nav = true;
+					if (current < NAV_LIMIT) {
 						document.getElementsByTagName("nav")[0].className="hamburger_nav";
 						document.getElementById("original_logo").style.right="-110px";
 						document.getElementById("original_logo").style.padding="0";
-						console.log("false");
+					} else if (current > NAV_LIMIT) {
+						document.getElementsByTagName("nav")[0].className="";
+						document.getElementById("original_logo").style.right="";
+						document.getElementById("original_logo").style.padding="";
 					}
-				});
+				} else {
+					show_full_nav = false;
+					document.getElementsByTagName("nav")[0].className="hamburger_nav";
+					document.getElementById("original_logo").style.right="-110px";
+					document.getElementById("original_logo").style.padding="0";
+				}
+			}
+
+			window.addEventListener("resize", check_sizing);
+			window.addEventListener("load", function (e) {
+				check_sizing(e);
 			});
 
 			let hb = document.getElementById("hamburger");
@@ -554,28 +574,33 @@
 
 			let current = 0;
 			function scroll_page (delta, ev) {
-				if (!allowed_to_scroll) {
+				if (!allowed_to_scroll && typeof ev != "string") {
 					ev.preventDefault();
+					return;
 				} else {
 					let ans = current - delta;
 					if (ans < ((NUM_PAGES-1)*-window.innerHeight)) ans = -window.innerHeight;
 					else if (ans > 0) ans = 0;
 					current = ans;
 					var direction = delta < 0 ? "up" : "down";
-					if (show_full_nav) {
-						if (direction=="down" && current < NAV_LIMIT) {
-							document.getElementsByTagName("nav")[0].className="hamburger_nav";
-							document.getElementById("original_logo").style.right="-110px";
-							document.getElementById("original_logo").style.padding="0";
-						} else if (direction=="up" && current > NAV_LIMIT) {
-							document.getElementsByTagName("nav")[0].className="";
-							document.getElementById("original_logo").style.right="";
-							document.getElementById("original_logo").style.padding="";
-						}
-					}
 					if (window.innerWidth > 600) {
+						if (typeof ev == "string") {
+							current = -delta;
+							ans = -delta;
+						}
 						document.querySelector("main").style.transform = "translate(0px, "+ans+"px)";
 						document.getElementById("scrollbar").style.transform = "translate(0px, "+(Math.abs(ans/((NUM_PAGES-1)*window.innerHeight))*(window.innerHeight-100))+"px)";
+					}
+				}
+				if (show_full_nav) {
+					if (direction=="down" && current < NAV_LIMIT) {
+						document.getElementsByTagName("nav")[0].className="hamburger_nav";
+						document.getElementById("original_logo").style.right="-110px";
+						document.getElementById("original_logo").style.padding="0";
+					} else if (direction=="up" && current > NAV_LIMIT) {
+						document.getElementsByTagName("nav")[0].className="";
+						document.getElementById("original_logo").style.right="";
+						document.getElementById("original_logo").style.padding="";
 					}
 				}
 			}
@@ -594,6 +619,23 @@
 			}
 
 			animateText('.fadein');
+
+			window.addEventListener("hashchange", function (e) {
+				let hash = location.hash;
+				if (!!hash && !hash.startsWith("#section")) {
+					if (window.innerWidth<600) {
+						location.hash = {
+							"#products":"#section2",
+							"#why":"#section3",
+							"#pricing":"#section4",
+							"#about":"#section5"
+						}[hash] || "";
+					} else {
+						scroll_page(window.innerHeight * ["", "#products", "#why", "#pricing", "#about"].indexOf(hash),"");
+					}
+				}
+				history.replaceState({}, "", location.protocol+'//'+location.host+location.pathname);
+			});
 		</script>
 	</body>
 </html>
